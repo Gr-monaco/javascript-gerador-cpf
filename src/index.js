@@ -1,3 +1,5 @@
 import './assets/css/style.css';
 
-console.log("Lol")
+import {Validador} from './modules/validadorcpf.js'
+
+const validador = new Validador();
