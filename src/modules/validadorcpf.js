@@ -28,7 +28,7 @@ class Validador {
             return prev += current * (index + 2);
         }, 0);
 
-        middle = (soma * 10 % 11 > 9) ? 0 : soma * 10 % 11;;
+        middle = (soma * 10 % 11 > 9) ? 0 : soma * 10 % 11;
         //Verifica se o segundo digito é valido
         if (!(middle === parseInt(array_pv2[1]))) return false;
 
