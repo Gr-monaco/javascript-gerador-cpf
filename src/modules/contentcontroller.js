@@ -12,7 +12,15 @@ class ControllerManager {
             if (e.target.classList.contains("cpfgera")){
                 this.addCPF(this.geradorCPF.gera());
             }
+            if (e.target.classList.contains("delbutton")){
+                this.delCPF(e.target);
+            }
+
         })
+    }
+
+    delCPF(obj){
+        obj.parentElement.remove();
     }
 
     addCPF(cpf){
@@ -22,6 +30,7 @@ class ControllerManager {
         divisor.appendChild(para);
         let buttonDel = document.createElement('button');
         buttonDel.innerText = "Deletar";
+        buttonDel.classList.add("delbutton");
         para.appendChild(buttonDel)
         divisor.classList.add("cpfdiv");
         this.divCPF.appendChild(divisor);
