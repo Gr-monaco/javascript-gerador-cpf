@@ -17,8 +17,13 @@ class ControllerManager {
 
     addCPF(cpf){
         let divisor = document.createElement('div');
+        let para = document.createElement('p');
+        para.innerText = cpf;
+        divisor.appendChild(para);
+        let buttonDel = document.createElement('button');
+        buttonDel.innerText = "Deletar";
+        para.appendChild(buttonDel)
         divisor.classList.add("cpfdiv");
-        divisor.innerText = cpf;
         this.divCPF.appendChild(divisor);
     }
 }
