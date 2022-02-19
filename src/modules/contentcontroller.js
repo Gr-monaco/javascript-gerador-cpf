@@ -20,7 +20,10 @@ class ControllerManager {
     }
 
     delCPF(obj){
-        obj.parentElement.remove();
+        obj.parentElement.parentElement.classList.add("cpfdel");
+        obj.parentElement.addEventListener('animationend', function() {
+            obj.parentElement.remove();
+        })
     }
 
     addCPF(cpf){

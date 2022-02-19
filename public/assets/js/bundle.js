@@ -2,6 +2,133 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/modules/contentcontroller.js":
+/*!******************************************!*\
+  !*** ./src/modules/contentcontroller.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ControllerManager": () => (/* binding */ ControllerManager)
+/* harmony export */ });
+/* harmony import */ var _geradorcpf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./geradorcpf */ "./src/modules/geradorcpf.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+
+
+var ControllerManager = /*#__PURE__*/function () {
+  function ControllerManager() {
+    var _this = this;
+
+    _classCallCheck(this, ControllerManager);
+
+    this.divCPF = document.querySelector('.cpfcontainer');
+    this.buttonGeraCPF = document.querySelector('.cpfgera');
+    this.geradorCPF = new _geradorcpf__WEBPACK_IMPORTED_MODULE_0__.GeradorCPF(); //Eu utilizei arrow function para não ter problema de escopo na hora de usar o this
+
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("cpfgera")) {
+        _this.addCPF(_this.geradorCPF.gera());
+      }
+
+      if (e.target.classList.contains("delbutton")) {
+        _this.delCPF(e.target);
+      }
+    });
+  }
+
+  _createClass(ControllerManager, [{
+    key: "delCPF",
+    value: function delCPF(obj) {
+      obj.parentElement.parentElement.classList.add("cpfdel");
+      obj.parentElement.addEventListener('animationend', function () {
+        obj.parentElement.remove();
+      });
+    }
+  }, {
+    key: "addCPF",
+    value: function addCPF(cpf) {
+      var divisor = document.createElement('div');
+      var para = document.createElement('p');
+      para.innerText = cpf;
+      divisor.appendChild(para);
+      var buttonDel = document.createElement('button');
+      buttonDel.innerText = "Deletar";
+      buttonDel.classList.add("delbutton");
+      para.appendChild(buttonDel);
+      divisor.classList.add("cpfdiv");
+      this.divCPF.appendChild(divisor);
+    }
+  }]);
+
+  return ControllerManager;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/modules/geradorcpf.js":
+/*!***********************************!*\
+  !*** ./src/modules/geradorcpf.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "GeradorCPF": () => (/* binding */ GeradorCPF)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var GeradorCPF = /*#__PURE__*/function () {
+  function GeradorCPF() {
+    _classCallCheck(this, GeradorCPF);
+  }
+
+  _createClass(GeradorCPF, [{
+    key: "gera",
+    value: function gera() {
+      var cpf = new Array(9).fill().map(function () {
+        return Math.floor(Math.random() * 10);
+      }); //O cpf é gerado invertido para facilitar no uso das funções map
+
+      var soma = cpf.map(function (f) {
+        return parseInt(f);
+      }).reduce(function (prev, current, index, array) {
+        return prev += current * (index + 2);
+      }, 0);
+      var digito = soma * 10 % 11 > 9 ? 0 : soma * 10 % 11;
+      cpf.unshift(digito); //Gerando segundo digito
+
+      soma = cpf.map(function (f) {
+        return parseInt(f);
+      }).reduce(function (prev, current, index, array) {
+        return prev += current * (index + 2);
+      }, 0);
+      digito = soma * 10 % 11 > 9 ? 0 : soma * 10 % 11;
+      cpf.unshift(digito);
+      cpf = cpf.reverse().join('');
+      var cpfFinal = cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6, 9) + '-' + cpf.slice(9, 11);
+      return cpfFinal;
+    }
+  }]);
+
+  return GeradorCPF;
+}();
+
+
+
+/***/ }),
+
 /***/ "./src/modules/validadorcpf.js":
 /*!*************************************!*\
   !*** ./src/modules/validadorcpf.js ***!
@@ -73,8 +200,7 @@ var Validador = /*#__PURE__*/function () {
       }).reduce(function (prev, current, index, array) {
         return prev += current * (index + 2);
       }, 0);
-      middle = soma * 10 % 11 > 9 ? 0 : soma * 10 % 11;
-      ; //Verifica se o segundo digito é valido
+      middle = soma * 10 % 11 > 9 ? 0 : soma * 10 % 11; //Verifica se o segundo digito é valido
 
       if (!(middle === parseInt(array_pv2[1]))) return false;
       return true;
@@ -108,7 +234,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root {\r\n    --primary-color:rgb(25, 35, 128);\r\n    --primary-color-darker:rgb(5, 10, 56);\r\n}\r\n\r\n* {\r\n    box-sizing: border-box;\r\n    outline: 0;\r\n}\r\n\r\nbody {\r\n    margin: 0;\r\n    padding: 0;\r\n    background: var(--primary-color);\r\n    font-family: 'Open sans', sans-serif;\r\n    font-size: 1.3em;\r\n    line-height: 1.5em;\r\n}\r\n\r\n.container {\r\n    max-width: 640px;\r\n    margin: 50px auto;\r\n    background: #fff;\r\n    padding: 20px;\r\n    border-radius: 10px;\r\n}\r\n\r\nform input, form label, form button {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\nform input {\r\n    font-size: 24px;\r\n    height: 50px;\r\n    padding: 0 20px;\r\n}\r\n\r\nform input:focus {\r\n    outline: 1px solid var(--primary-color);\r\n}\r\n\r\nform button {\r\n    border: none;\r\n    background: var(--primary-color);\r\n    color: #fff;\r\n    font-size: 18px;\r\n    font-weight: 700;\r\n    height: 50px;\r\n    cursor: pointer;\r\n    margin-top: 30px;\r\n}\r\n\r\nform button:hover {\r\n    background: var(--primary-color-darker);\r\n}\r\n\r\nform button:active{\r\n    background: blue;\r\n}", "",{"version":3,"sources":["webpack://./src/assets/css/style.css"],"names":[],"mappings":"AAEA;IACI,gCAAgC;IAChC,qCAAqC;AACzC;;AAEA;IACI,sBAAsB;IACtB,UAAU;AACd;;AAEA;IACI,SAAS;IACT,UAAU;IACV,gCAAgC;IAChC,oCAAoC;IACpC,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;IAChB,iBAAiB;IACjB,gBAAgB;IAChB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,cAAc;IACd,WAAW;IACX,mBAAmB;AACvB;;AAEA;IACI,eAAe;IACf,YAAY;IACZ,eAAe;AACnB;;AAEA;IACI,uCAAuC;AAC3C;;AAEA;IACI,YAAY;IACZ,gCAAgC;IAChC,WAAW;IACX,eAAe;IACf,gBAAgB;IAChB,YAAY;IACZ,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,uCAAuC;AAC3C;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');\r\n\r\n:root {\r\n    --primary-color:rgb(25, 35, 128);\r\n    --primary-color-darker:rgb(5, 10, 56);\r\n}\r\n\r\n* {\r\n    box-sizing: border-box;\r\n    outline: 0;\r\n}\r\n\r\nbody {\r\n    margin: 0;\r\n    padding: 0;\r\n    background: var(--primary-color);\r\n    font-family: 'Open sans', sans-serif;\r\n    font-size: 1.3em;\r\n    line-height: 1.5em;\r\n}\r\n\r\n.container {\r\n    max-width: 640px;\r\n    margin: 50px auto;\r\n    background: #fff;\r\n    padding: 20px;\r\n    border-radius: 10px;\r\n}\r\n\r\nform input, form label, form button {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\nform input {\r\n    font-size: 24px;\r\n    height: 50px;\r\n    padding: 0 20px;\r\n}\r\n\r\nform input:focus {\r\n    outline: 1px solid var(--primary-color);\r\n}\r\n\r\nform button {\r\n    border: none;\r\n    background: var(--primary-color);\r\n    color: #fff;\r\n    font-size: 18px;\r\n    font-weight: 700;\r\n    height: 50px;\r\n    cursor: pointer;\r\n    margin-top: 30px;\r\n}\r\n\r\nform button:hover {\r\n    background: var(--primary-color-darker);\r\n}\r\n\r\nform button:active{\r\n    background: blue;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root {\r\n    --primary-color:rgb(25, 35, 128);\r\n    --primary-color-darker:rgb(5, 10, 56);\r\n}\r\n\r\n* {\r\n    box-sizing: border-box;\r\n    outline: 0;\r\n}\r\n\r\nbutton {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\ndiv p button{\r\n    width: 10%;\r\n    margin: 0 0 0 10%;\r\n    height:      25px;  \r\n    display: inline-block;\r\n}\r\n\r\n@keyframes fadein {\r\n    0% {margin:0 0 0 0; color: white;}\r\n    50% {margin: 1em 0 1em 0; color:white;}\r\n    100% { color:black;}    \r\n}\r\n\r\n@keyframes fadeout {\r\n    0% {color:black; margin: 1em 0 1em 0;}\r\n    50%{margin: 1em 0 1em 0;color:white;}\r\n    100%{margin: 0 0 0 0; color: white;}    \r\n}\r\n\r\ndiv.cpfdiv p{\r\n    animation: fadein 1s;\r\n}\r\n\r\ndiv.cpfdiv.cpfdel p{\r\n    animation: fadeout 1s;\r\n}\r\n\r\n@keyframes fadeinbutton{\r\n    0% {opacity: 0; height:0px; color: #fff;}\r\n    50% {opacity: 0; height: 0px;}\r\n    75% {color: #fff;}\r\n    100% {opacity: 1; height: 25px; color: black}\r\n}\r\n\r\n@keyframes fadeoutbutton{\r\n    0% {opacity: 1; height: 25px; color: black}\r\n    25% {color: #fff;}\r\n    50% {opacity: 0; height: 25px;}\r\n    100% {opacity: 0; height:0px; color: #fff;}\r\n}\r\n\r\ndiv.cpfdiv.cpfdel p button.delbutton{\r\n    animation: fadeoutbutton 1s;\r\n}\r\n\r\ndiv.cpfdiv p button.delbutton{\r\n    animation: fadeinbutton 1s;\r\n}\r\n\r\np {\r\n    text-align: center;\r\n}\r\n\r\n\r\nbody {\r\n    margin: 0;\r\n    padding: 0;\r\n    background: var(--primary-color);\r\n    font-family: 'Open sans', sans-serif;\r\n    font-size: 1.3em;\r\n    line-height: 1.5em;\r\n}\r\n\r\n.container {\r\n    max-width: 640px;\r\n    margin: 50px auto;\r\n    background: #fff;\r\n    padding: 20px;\r\n    border-radius: 10px;\r\n}\r\n\r\nform input, form label, form button {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\nform input {\r\n    font-size: 24px;\r\n    height: 50px;\r\n    padding: 0 20px;\r\n}\r\n\r\nform input:focus {\r\n    outline: 1px solid var(--primary-color);\r\n}\r\n\r\nform button {\r\n    border: none;\r\n    background: var(--primary-color);\r\n    color: #fff;\r\n    font-size: 18px;\r\n    font-weight: 700;\r\n    height: 50px;\r\n    cursor: pointer;\r\n    margin-top: 30px;\r\n}\r\n\r\nform button:hover {\r\n    background: var(--primary-color-darker);\r\n}\r\n\r\nform button:active{\r\n    background: blue;\r\n}\r\n\r\n", "",{"version":3,"sources":["webpack://./src/assets/css/style.css"],"names":[],"mappings":"AAEA;IACI,gCAAgC;IAChC,qCAAqC;AACzC;;AAEA;IACI,sBAAsB;IACtB,UAAU;AACd;;AAEA;IACI,cAAc;IACd,WAAW;IACX,mBAAmB;AACvB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,iBAAiB;IACjB,qBAAqB;AACzB;;AAEA;IACI,IAAI,cAAc,EAAE,YAAY,CAAC;IACjC,KAAK,mBAAmB,EAAE,WAAW,CAAC;IACtC,OAAO,WAAW,CAAC;AACvB;;AAEA;IACI,IAAI,WAAW,EAAE,mBAAmB,CAAC;IACrC,IAAI,mBAAmB,CAAC,WAAW,CAAC;IACpC,KAAK,eAAe,EAAE,YAAY,CAAC;AACvC;;AAEA;IACI,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,IAAI,UAAU,EAAE,UAAU,EAAE,WAAW,CAAC;IACxC,KAAK,UAAU,EAAE,WAAW,CAAC;IAC7B,KAAK,WAAW,CAAC;IACjB,MAAM,UAAU,EAAE,YAAY,EAAE,YAAY;AAChD;;AAEA;IACI,IAAI,UAAU,EAAE,YAAY,EAAE,YAAY;IAC1C,KAAK,WAAW,CAAC;IACjB,KAAK,UAAU,EAAE,YAAY,CAAC;IAC9B,MAAM,UAAU,EAAE,UAAU,EAAE,WAAW,CAAC;AAC9C;;AAEA;IACI,2BAA2B;AAC/B;;AAEA;IACI,0BAA0B;AAC9B;;AAEA;IACI,kBAAkB;AACtB;;;AAGA;IACI,SAAS;IACT,UAAU;IACV,gCAAgC;IAChC,oCAAoC;IACpC,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;IAChB,iBAAiB;IACjB,gBAAgB;IAChB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,cAAc;IACd,WAAW;IACX,mBAAmB;AACvB;;AAEA;IACI,eAAe;IACf,YAAY;IACZ,eAAe;AACnB;;AAEA;IACI,uCAAuC;AAC3C;;AAEA;IACI,YAAY;IACZ,gCAAgC;IAChC,WAAW;IACX,eAAe;IACf,gBAAgB;IAChB,YAAY;IACZ,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,uCAAuC;AAC3C;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');\r\n\r\n:root {\r\n    --primary-color:rgb(25, 35, 128);\r\n    --primary-color-darker:rgb(5, 10, 56);\r\n}\r\n\r\n* {\r\n    box-sizing: border-box;\r\n    outline: 0;\r\n}\r\n\r\nbutton {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\ndiv p button{\r\n    width: 10%;\r\n    margin: 0 0 0 10%;\r\n    height:      25px;  \r\n    display: inline-block;\r\n}\r\n\r\n@keyframes fadein {\r\n    0% {margin:0 0 0 0; color: white;}\r\n    50% {margin: 1em 0 1em 0; color:white;}\r\n    100% { color:black;}    \r\n}\r\n\r\n@keyframes fadeout {\r\n    0% {color:black; margin: 1em 0 1em 0;}\r\n    50%{margin: 1em 0 1em 0;color:white;}\r\n    100%{margin: 0 0 0 0; color: white;}    \r\n}\r\n\r\ndiv.cpfdiv p{\r\n    animation: fadein 1s;\r\n}\r\n\r\ndiv.cpfdiv.cpfdel p{\r\n    animation: fadeout 1s;\r\n}\r\n\r\n@keyframes fadeinbutton{\r\n    0% {opacity: 0; height:0px; color: #fff;}\r\n    50% {opacity: 0; height: 0px;}\r\n    75% {color: #fff;}\r\n    100% {opacity: 1; height: 25px; color: black}\r\n}\r\n\r\n@keyframes fadeoutbutton{\r\n    0% {opacity: 1; height: 25px; color: black}\r\n    25% {color: #fff;}\r\n    50% {opacity: 0; height: 25px;}\r\n    100% {opacity: 0; height:0px; color: #fff;}\r\n}\r\n\r\ndiv.cpfdiv.cpfdel p button.delbutton{\r\n    animation: fadeoutbutton 1s;\r\n}\r\n\r\ndiv.cpfdiv p button.delbutton{\r\n    animation: fadeinbutton 1s;\r\n}\r\n\r\np {\r\n    text-align: center;\r\n}\r\n\r\n\r\nbody {\r\n    margin: 0;\r\n    padding: 0;\r\n    background: var(--primary-color);\r\n    font-family: 'Open sans', sans-serif;\r\n    font-size: 1.3em;\r\n    line-height: 1.5em;\r\n}\r\n\r\n.container {\r\n    max-width: 640px;\r\n    margin: 50px auto;\r\n    background: #fff;\r\n    padding: 20px;\r\n    border-radius: 10px;\r\n}\r\n\r\nform input, form label, form button {\r\n    display: block;\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n}\r\n\r\nform input {\r\n    font-size: 24px;\r\n    height: 50px;\r\n    padding: 0 20px;\r\n}\r\n\r\nform input:focus {\r\n    outline: 1px solid var(--primary-color);\r\n}\r\n\r\nform button {\r\n    border: none;\r\n    background: var(--primary-color);\r\n    color: #fff;\r\n    font-size: 18px;\r\n    font-weight: 700;\r\n    height: 50px;\r\n    cursor: pointer;\r\n    margin-top: 30px;\r\n}\r\n\r\nform button:hover {\r\n    background: var(--primary-color-darker);\r\n}\r\n\r\nform button:active{\r\n    background: blue;\r\n}\r\n\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -693,10 +819,16 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _assets_css_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/css/style.css */ "./src/assets/css/style.css");
-/* harmony import */ var _modules_validadorcpf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/validadorcpf.js */ "./src/modules/validadorcpf.js");
+/* harmony import */ var _modules_validadorcpf__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/validadorcpf */ "./src/modules/validadorcpf.js");
+/* harmony import */ var _modules_geradorcpf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/geradorcpf */ "./src/modules/geradorcpf.js");
+/* harmony import */ var _modules_contentcontroller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/contentcontroller */ "./src/modules/contentcontroller.js");
 
 
-var validador = new _modules_validadorcpf_js__WEBPACK_IMPORTED_MODULE_1__.Validador();
+
+
+var validador = new _modules_validadorcpf__WEBPACK_IMPORTED_MODULE_1__.Validador();
+var controller = new _modules_contentcontroller__WEBPACK_IMPORTED_MODULE_3__.ControllerManager();
+console.log(controller);
 })();
 
 /******/ })()
