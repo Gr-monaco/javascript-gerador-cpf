@@ -5,5 +5,3 @@ import { GeradorCPF } from './modules/geradorcpf'
 import { ControllerManager } from './modules/contentcontroller';
 const validador = new Validador();
 const controller = new ControllerManager();
-
-console.log(controller)
